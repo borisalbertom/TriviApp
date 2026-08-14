@@ -34,16 +34,12 @@ export function AuthProvider({ children }) {
   }
 
   async function registrarse(email, password, nombre) {
-    const { data, error } = await supabase.auth.signUp({ email, password })
-    if (error) return { error }
-
-    if (data.user) {
-      const { error: perfilError } = await supabase
-        .from('perfiles')
-        .insert({ id: data.user.id, nombre })
-      if (perfilError) return { error: perfilError }
-    }
-    return { data }
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { nombre } },
+    })
+    return { data, error }
   }
 
   async function iniciarSesion(email, password) {
